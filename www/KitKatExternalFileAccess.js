@@ -11,8 +11,8 @@ var KitKatExternalFileAccess = function() {
  *            function to be called when there was a problem with acquiring the
  *            wake-lock
  */
-KitKatExternalFileAccess.prototype.acquire = function(successCallback, failureCallback) {
-	cordova.exec(successCallback, failureCallback, 'KitKatExternalFileAccess', 'acquire', []);
+KitKatExternalFileAccess.prototype.getPackageName = function(successCallback, failureCallback) {
+	cordova.exec(successCallback, failureCallback, 'KitKatExternalFileAccess', 'packageName', []);
 };
 
 /**
@@ -24,8 +24,8 @@ KitKatExternalFileAccess.prototype.acquire = function(successCallback, failureCa
  *            function to be called when there was a problem while releasing the
  *            wake-lock
  */
-KitKatExternalFileAccess.prototype.release = function(successCallback, failureCallback) {
-	cordova.exec(successCallback, failureCallback, 'KitKatExternalFileAccess', 'release', []);
+KitKatExternalFileAccess.prototype.getExternalPaths = function(successCallback, failureCallback) {
+	cordova.exec(successCallback, failureCallback, 'KitKatExternalFileAccess', 'externalPaths', []);
 };
 
 module.exports = new KitKatExternalFileAccess();

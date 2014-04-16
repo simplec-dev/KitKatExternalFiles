@@ -1,10 +1,17 @@
 package com.simplec.phonegap.plugins.externalfiles;
 
 import org.apache.cordova.CordovaInterface;
+                             
+import org.json.JSONObject; 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+
 import android.util.Log;
 
 import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaPlugin; 
+import org.apache.cordova.CallbackContext;
 
 import java.io.File;
 
@@ -40,21 +47,13 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
       try {
         if (ACTION_PACKAGE_NAME.equals(action)) {
-          cordova.getActivity().runOnUiThread(
-              new Runnable() {
-                public void run() {
-                    callbackContext.sendPluginResult(new PluginResult(packageName));
-                }
-              });
+                    JSONObject r = new JSONObject(packageName);
+                    callbackContext.success(r);
           return true;
 
-        } else if (ACTION_EXTERNAL_PATHS.equals(action)) {
-          cordova.getActivity().runOnUiThread(
-              new Runnable() {
-                public void run() {
-                  callbackContext.sendPluginResult(new PluginResult(externalPaths));
-                }
-              });
+        } else if (ACTION_EXTERNAL_PATHS.equals(action)) {        
+                    JSONArray r = new JSONArray(externalPaths);
+                    callbackContext.success(r);
           return true;
 
         } else {
@@ -67,3 +66,4 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
       }
     }
 }
+

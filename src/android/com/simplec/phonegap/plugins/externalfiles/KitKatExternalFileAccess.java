@@ -1,4 +1,4 @@
-package com.simplec.phonegap.plugins.videosettings;
+package com.simplec.phonegap.plugins.externalfiles;
 
 import org.apache.cordova.CordovaInterface;
 import android.util.Log;
@@ -16,7 +16,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-
+s
         packageName = cordova.getActivity().getApplicationContext().getPackageName();
 
 		File[] files = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);

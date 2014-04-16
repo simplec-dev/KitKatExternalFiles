@@ -4,7 +4,7 @@
 	id="com.simplec.plugins.externalfiles"
 	version="0.1.0">
 
-	<name>KitKat External File Access</name>
+	<name>KitKatExternalFileAccess</name>
 	
 	<description>
 		This plugin to intialize KitKat External File Access
@@ -15,6 +15,10 @@
 	<engines>
 		<engine name="cordova" version=">=3.3.0" />
 	</engines>
+	
+	<js-module src="www/KitKatExternalFileAccess.js" name="KitKatExternalFileAccess">
+		<clobbers target="window.plugins.externalFileAccess" />
+	</js-module>
 	
 	  <!-- android -->
 	  <platform name="android">

@@ -9,10 +9,13 @@ import org.apache.cordova.CordovaPlugin;
 import java.io.File;
 
 public class KitKatExternalFileAccess extends CordovaPlugin {
+    private static final String ACTION_PACKAGE_NAME = "packageName";
+    private static final String ACTION_EXTERNAL_PATHS = "externalPaths";
+    private static final String LOG_TAG = "KitKatExternalFileAccess";
+    
 	private String packageName = null;
 	private String[] externalPaths = null;
 
-    private static final String LOG_TAG = "KitKatExternalFileAccess";
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
@@ -31,5 +34,36 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 
         Log.d(LOG_TAG, "KitKatExternalFileAccess initialized");
 
+    }
+
+    @Override
+    public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
+      try {
+        if (ACTION_PACKAGE_NAME.equals(action)) {
+          cordova.getActivity().runOnUiThread(
+              new Runnable() {
+                public void run() {
+                    callbackContext.sendPluginResult(new PluginResult(packageName));
+                }
+              });
+          return true;
+
+        } else if (ACTION_EXTERNAL_PATHS.equals(action)) {
+          cordova.getActivity().runOnUiThread(
+              new Runnable() {
+                public void run() {
+                  callbackContext.sendPluginResult(new PluginResult(externalPaths));
+                }
+              });
+          return true;
+
+        } else {
+          callbackContext.error(action + " is not a supported function. Did you mean '" + ACTION_EXTERNAL_PATHS + "'?");
+          return false;
+        }
+      } catch (Exception e) {
+        callbackContext.error(e.getMessage());
+        return false;
+      }
     }
 }

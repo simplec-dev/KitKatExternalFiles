@@ -32,7 +32,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
         File[] files = new File[0];
         try {
         	files = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
-        } catch (Exception e) {
+        } catch (Throwable e) {
         	
         }
         
@@ -57,7 +57,10 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
           return true;
 
         } else if (ACTION_EXTERNAL_PATHS.equals(action)) {        
-                    JSONArray r = new JSONArray(externalPaths);
+                    JSONArray r = new JSONArray();
+					for (String path : externalPaths) {
+					  r.put(path);
+					}
                     callbackContext.success(r);
           return true;
 
@@ -71,5 +74,3 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
       }
     }
 }
-
-

@@ -31,7 +31,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 
         File[] files = new File[0];
         try {
-        	File[] files = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
+        	files = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
         } catch (Exception e) {
         	
         }

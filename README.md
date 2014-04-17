@@ -18,3 +18,10 @@ Also, you can call the plugin to get the external paths in an array.
 window.plugins.externalFileAccess.getExternalPaths(successCallback);
 
 Where successCallback is a function(pathArray);
+
+You can also access the externalPaths as a member variable of the plugin.
+
+if (window.plugins.externalFileAccess.available==true) {
+	//window.plugins.externalFileAccess.externalPaths is an array of paths
+	//window.plugins.externalFileAccess.packageName is the app package name
+}

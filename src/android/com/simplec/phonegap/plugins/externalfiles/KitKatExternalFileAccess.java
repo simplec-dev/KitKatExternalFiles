@@ -14,6 +14,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
 public class KitKatExternalFileAccess extends CordovaPlugin {
     private static final String ACTION_PACKAGE_NAME = "packageName";
@@ -33,16 +34,24 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
         try {
         	files = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
         } catch (Throwable e) {
-        	
+	        Log.d(LOG_TAG, "KitKat getExternalFilesDir unavailable.  Getting old version via reflection.");
+        	try {
+				Object context = cordova.getActivity().getApplicationContext();
+				Method m = context.getClass().getMethod("getExternalFilesDir", new Class[]{String.class});
+				m.setAccessible(true);
+				File file = (File)m.invoke(context, new Object[]{null});
+				
+				files = new File[] {file};
+        	} catch (Throwable e2) {
+    	        Log.d(LOG_TAG, "PRE KitKat getExternalFilesDir unavailable. "+e2.getMessage());
+        	}
         }
         
 		externalPaths = new String[files.length];
 		for (int i=0; i<files.length; i++) {
 			File file = files[i];
 			externalPaths[i] = file.getPath();
-		}
-		for (File file : files) {
-	        Log.d(LOG_TAG, "External Path: "+file.getPath());
+	        Log.d(LOG_TAG, "External Path: "+externalPaths[i]);
 		}
 
         Log.d(LOG_TAG, "KitKatExternalFileAccess initialized");

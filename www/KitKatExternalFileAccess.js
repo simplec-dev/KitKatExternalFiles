@@ -1,5 +1,38 @@
 
+
+var channel = require('cordova/channel');
+var utils = require('cordova/utils');
+
+channel.createSticky('onExternalPathsReady');
+// Tell cordova channel to wait on the CordovaInfoReady event
+channel.waitForInitialization('onExternalPathsReady');
+  
 var KitKatExternalFileAccess = function() {
+
+    this.available = false;
+    this.packageName = null;
+    this.externalPaths = null;
+
+    var me = this;
+
+    channel.onCordovaReady.subscribe(function() {
+        me.getExternalPaths(function(paths) {
+            me.externalPaths = paths;
+
+            me.getPackageName(function(name) {
+                me.packageName = name;
+                
+                channel.onExternalPathsReady.fire();
+            },function(e) {
+                me.available = false;
+                utils.alert("[ERROR] Error initializing package name: " + e);
+            });
+
+        },function(e) {
+            me.available = false;
+            utils.alert("[ERROR] Error initializing external paths: " + e);
+        });
+    });
 };
 
 /**

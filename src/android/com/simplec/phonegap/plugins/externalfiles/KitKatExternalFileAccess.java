@@ -47,8 +47,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
       try {
         if (ACTION_PACKAGE_NAME.equals(action)) {
-                    JSONObject r = new JSONObject(packageName);
-                    callbackContext.success(r);
+                    callbackContext.success(packageName);
           return true;
 
         } else if (ACTION_EXTERNAL_PATHS.equals(action)) {        
@@ -66,4 +65,5 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
       }
     }
 }
+
 

@@ -18,19 +18,22 @@ var KitKatExternalFileAccess = function() {
     channel.onCordovaReady.subscribe(function() {
         me.getExternalPaths(function(paths) {
             me.externalPaths = paths;
+            console.log("initializing package name: " + paths);
 
             me.getPackageName(function(name) {
+                me.available = true;
                 me.packageName = name;
                 
                 channel.onExternalPathsReady.fire();
+                console.log("initializing package name: " + name);
             },function(e) {
                 me.available = false;
-                utils.alert("[ERROR] Error initializing package name: " + e);
+                console.log("[ERROR] Error initializing package name: " + e);
             });
 
         },function(e) {
             me.available = false;
-            utils.alert("[ERROR] Error initializing external paths: " + e);
+            console.log("[ERROR] Error initializing external paths: " + e);
         });
     });
 };

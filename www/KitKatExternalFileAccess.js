@@ -32,22 +32,21 @@ var KitKatExternalFileAccess = function() {
 };
 
 KitKatExternalFileAccess.prototype.refresh = function(callback) {
-    var me = this;
-    me.available = false;
-    me.getExternalPaths(function(paths) {
-        me.externalPaths = paths;
+    this.available = false;
+    this.getExternalPaths(function(paths) {
+        this.externalPaths = paths;
 
-        me.getStorageStats(function(stats) {
-            me.storageStats = stats;
-            me.available = true;
+        this.getStorageStats(function(stats) {
+            this.storageStats = stats;
+            this.available = true;
             callback();
         },function(e) {
-            me.available = false;
+            this.available = false;
             callback();
             console.log("[ERROR] Error initializing external paths: " + e);
         });
     },function(e) {
-        me.available = false;
+        this.available = false;
         callback();
         console.log("[ERROR] Error initializing external paths: " + e);
     });

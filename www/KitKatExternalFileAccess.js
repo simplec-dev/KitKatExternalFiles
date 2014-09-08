@@ -22,7 +22,7 @@ var KitKatExternalFileAccess = function() {
             channel.onPackageNameReady.fire();
             console.log("initializing package name: " + name);
             
-            me.refresh();
+            $.proxy( me.refresh, me ) ();
         },function(e) {
             me.available = false;
             console.log("[ERROR] Error initializing package name: " + e);

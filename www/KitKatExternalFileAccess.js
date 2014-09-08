@@ -32,6 +32,7 @@ var KitKatExternalFileAccess = function() {
 };
 
 KitKatExternalFileAccess.prototype.refresh = function(callback) {
+    var me = this;
     me.available = false;
     me.getExternalPaths(function(paths) {
         me.externalPaths = paths;

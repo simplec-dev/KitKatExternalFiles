@@ -5,7 +5,7 @@ var utils = require('cordova/utils');
 
 channel.createSticky('onPackageNameReady');
 // Tell cordova channel to wait on the CordovaInfoReady event
-channel.waitForInitialization('onExternalPathsReady');
+channel.waitForInitialization('onPackageNameReady');
   
 var KitKatExternalFileAccess = function() {
     this.available = false;
@@ -14,6 +14,37 @@ var KitKatExternalFileAccess = function() {
     this.storageStats = null;
 
     var me = this;
+    console.log(me);
+
+	 me.refresh = function(callback) {
+			me.available = false;
+		             
+			 me.getExternalPaths(function(paths) {
+				  me.externalPaths = paths;
+		
+				  me.getStorageStats(function(stats) {
+						me.storageStats = stats;
+						me.available = true;
+		
+						console.log(JSON.stringify(stats));
+						if (callback) {
+							callback(me);
+						}          
+				  },function(e) {
+						me.available = false;
+						if (callback) {
+							callback(me);
+						}
+						console.log("[ERROR] Error initializing external paths: " + e);
+				  });
+			 },function(e) {
+				  this.available = false;
+						if (callback) {
+							callback(me);
+						}
+				  console.log("[ERROR] Error initializing external paths: " + e);
+			 });
+	 }	;
 
     channel.onCordovaReady.subscribe(function() {
         me.getPackageName(function(name) {
@@ -22,36 +53,14 @@ var KitKatExternalFileAccess = function() {
             channel.onPackageNameReady.fire();
             console.log("initializing package name: " + name);
             
-            $.proxy( me.refresh, me ) ();
+				me.refresh();
         },function(e) {
             me.available = false;
             console.log("[ERROR] Error initializing package name: " + e);
         });
         
     });
-};
-
-KitKatExternalFileAccess.prototype.refresh = function(callback) {
-    this.available = false;
-    this.getExternalPaths(function(paths) {
-        this.externalPaths = paths;
-
-        this.getStorageStats(function(stats) {
-            this.storageStats = stats;
-            this.available = true;
-            callback();
-        },function(e) {
-            this.available = false;
-            callback();
-            console.log("[ERROR] Error initializing external paths: " + e);
-        });
-    },function(e) {
-        this.available = false;
-        callback();
-        console.log("[ERROR] Error initializing external paths: " + e);
-    });
-
-}
+}; 
 
 KitKatExternalFileAccess.prototype.getPackageName = function(successCallback, failureCallback) {
 	cordova.exec(successCallback, failureCallback, 'KitKatExternalFileAccess', 'packageName', []);
@@ -66,3 +75,4 @@ KitKatExternalFileAccess.prototype.getStorageStats = function(successCallback, f
 };
 
 module.exports = new KitKatExternalFileAccess();
+

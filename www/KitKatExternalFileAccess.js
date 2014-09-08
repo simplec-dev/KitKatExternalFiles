@@ -38,7 +38,7 @@ var KitKatExternalFileAccess = function() {
 						console.log("[ERROR] Error initializing external paths: " + e);
 				  });
 			 },function(e) {
-				  this.available = false;
+				 me.available = false;
 						if (callback) {
 							callback(me);
 						}

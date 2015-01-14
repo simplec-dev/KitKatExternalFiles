@@ -2,6 +2,8 @@ package com.simplec.phonegap.plugins.externalfiles;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -74,15 +76,17 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 
 		Log.d(LOG_TAG, "KitKatExternalFileAccess getExternalPaths 2 - count = "+files.length);
 		
-		String[] externalPaths = new String[files.length];
+		List<String> externalPaths = new ArrayList<String>();
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
-			externalPaths[i] = file.getPath();
-			Log.d(LOG_TAG, "KitKatExternalFileAccess getExternalPaths 2 files[i] = "+externalPaths[i] );
+			if (file!=null && file.exists()) {
+				externalPaths.add(file.getPath());
+				Log.d(LOG_TAG, "KitKatExternalFileAccess getExternalPaths 2 files[i] = "+file.getPath());
+			}
 		}
 		Log.d(LOG_TAG, "KitKatExternalFileAccess getExternalPaths 3");
 
-		return externalPaths;
+		return externalPaths.toArray(new String[0]);
 	}
 
 	@Override

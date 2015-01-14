@@ -94,11 +94,14 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 				return true;
 
 			} else if (ACTION_EXTERNAL_PATHS.equals(action)) {
+				Log.d(LOG_TAG, "KitKatExternalFileAccess ACTION_EXTERNAL_PATHS 1");
 				JSONArray r = new JSONArray();
 				String[] externalPaths = getExternalPaths();
+				Log.d(LOG_TAG, "KitKatExternalFileAccess ACTION_EXTERNAL_PATHS 2 - "+externalPaths.length);
 				for (String path : externalPaths) {
 					r.put(path);
 				}
+				Log.d(LOG_TAG, "KitKatExternalFileAccess ACTION_EXTERNAL_PATHS 3");
 				callbackContext.success(r);
 				return true;
 
@@ -120,6 +123,8 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 				return false;
 			}
 		} catch (Exception e) {
+			Log.d(LOG_TAG, "KitKatExternalFileAccess EXECUTE ERROR");
+			e.printStackTrace();
 			callbackContext.error(e.getMessage());
 			return false;
 		}

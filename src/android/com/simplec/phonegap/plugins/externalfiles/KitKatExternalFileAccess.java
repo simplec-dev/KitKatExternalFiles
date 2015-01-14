@@ -37,8 +37,15 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 	public String[] getExternalPaths() {
 		File[] files = new File[0];
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			files = cordova.getActivity().getApplicationContext()
-					.getExternalFilesDirs(null);
+			try {
+				files = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
+			} catch (Throwable e2) {
+				Log.e(LOG_TAG, "POST KitKat getExternalFilesDir unavailable. " + e2.getMessage(), e2);
+
+				files = new File[] { Environment.getExternalStorageDirectory() };
+				
+				e2.printStackTrace();
+			}
 		} else {
 			Log.d(LOG_TAG,
 					"KitKat getExternalFilesDir unavailable.  Getting old version via reflection.");
@@ -51,10 +58,11 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 
 				files = new File[] { file };
 			} catch (Throwable e2) {
-				Log.d(LOG_TAG, "PRE KitKat getExternalFilesDir unavailable. "
-						+ e2.getMessage());
+				Log.e(LOG_TAG, "PRE KitKat getExternalFilesDir unavailable. " + e2.getMessage(), e2);
 
 				files = new File[] { Environment.getExternalStorageDirectory() };
+				
+				e2.printStackTrace();
 			}
 		}
 

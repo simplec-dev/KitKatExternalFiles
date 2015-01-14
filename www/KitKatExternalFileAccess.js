@@ -14,7 +14,6 @@ var KitKatExternalFileAccess = function() {
     this.storageStats = null;
 
     var me = this;
-    console.log(me);
 
 	 me.refresh = function(callback) {
 			me.available = false;

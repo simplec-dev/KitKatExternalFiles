@@ -35,6 +35,26 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 		Log.d(LOG_TAG, "KitKatExternalFileAccess initialized");
 
 	}
+	
+	public File getSpecialStorageDirectory() {
+		File result = Environment.getExternalStorageDirectory();
+		
+		File test = new File("/mt/usb_storage/USB_DISK0");
+		if (test.exists()) {
+			for (File f : test.listFiles()) {
+				if (f.isDirectory()) {
+					return f;
+				}
+			}
+		}
+		
+		test = new File("/mnt/external_sd");
+		if (test.exists()) {
+			return test;
+		}
+		
+		return result;
+	}
 
 	public String[] getExternalPaths() {
 		Log.d(LOG_TAG, "KitKatExternalFileAccess getExternalPaths");
@@ -49,7 +69,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 				Log.d(LOG_TAG, "KitKatExternalFileAccess POST 4");
 				Log.e(LOG_TAG, "POST KitKat getExternalFilesDir unavailable. " + e2.getMessage(), e2);
 
-				files = new File[] { Environment.getExternalStorageDirectory() };
+				files = new File[] { getSpecialStorageDirectory() };
 				Log.d(LOG_TAG, "KitKatExternalFileAccess POST 5");
 				
 				e2.printStackTrace();
@@ -68,7 +88,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 			} catch (Throwable e2) {
 				Log.e(LOG_TAG, "PRE KitKat getExternalFilesDir unavailable. " + e2.getMessage(), e2);
 
-				files = new File[] { Environment.getExternalStorageDirectory() };
+				files = new File[] { getSpecialStorageDirectory() };
 				
 				e2.printStackTrace();
 			}

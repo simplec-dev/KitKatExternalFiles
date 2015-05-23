@@ -20,7 +20,11 @@ var KitKatExternalFileAccess = function() {
 		             
 			 me.getExternalPaths(function(paths) {
 				  me.externalPaths = paths;
-		
+				  me.available = true;
+					if (callback) {
+						callback(me);
+					}          
+		/*
 				  me.getStorageStats(function(stats) {
 						me.storageStats = stats;
 						me.available = true;
@@ -35,7 +39,7 @@ var KitKatExternalFileAccess = function() {
 							callback(me);
 						}
 						console.log("[ERROR] Error initializing external paths: " + e);
-				  });
+				  });*/
 			 },function(e) {
 				 me.available = false;
 						if (callback) {

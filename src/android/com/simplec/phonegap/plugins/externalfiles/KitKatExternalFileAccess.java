@@ -37,7 +37,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 	}
 	
 	public File getSpecialStorageDirectory() {		
-		File test = new File("/mt/usb_storage/USB_DISK0");
+		File test = new File("/mnt/usb_storage/USB_DISK0");
 		if (test.exists()) {
 			for (File f : test.listFiles()) {
 				if (f.isDirectory()) {

@@ -59,7 +59,8 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 		if (f!=null) {
 			Log.d(LOG_TAG, "KitKatExternalFileAccess SPECIAL DIR: "+f.getAbsolutePath());
 			
-			files = new File[] { f };
+			// need to return 2 for player to recognize this as an override
+			files = new File[] { Environment.getExternalStorageDirectory(), f };
 		} else {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 				Log.d(LOG_TAG, "KitKatExternalFileAccess POST");

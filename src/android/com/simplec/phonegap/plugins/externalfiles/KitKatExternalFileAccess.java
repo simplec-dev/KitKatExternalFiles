@@ -36,9 +36,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 
 	}
 	
-	public File getSpecialStorageDirectory() {
-		File result = Environment.getExternalStorageDirectory();
-		
+	public File getSpecialStorageDirectory() {		
 		File test = new File("/mt/usb_storage/USB_DISK0");
 		if (test.exists()) {
 			for (File f : test.listFiles()) {
@@ -48,49 +46,54 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 			}
 		}
 		
-		test = new File("/mnt/external_sd");
-		if (test.exists()) {
-			return test;
-		}
-		
-		return result;
+		return null;
 	}
 
 	public String[] getExternalPaths() {
 		Log.d(LOG_TAG, "KitKatExternalFileAccess getExternalPaths");
 		File[] files = new File[0];
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			Log.d(LOG_TAG, "KitKatExternalFileAccess POST");
-			try {
-				Log.d(LOG_TAG, "KitKatExternalFileAccess POST 2");
-				files = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
-				Log.d(LOG_TAG, "KitKatExternalFileAccess POST 3");
-			} catch (Throwable e2) {
-				Log.d(LOG_TAG, "KitKatExternalFileAccess POST 4");
-				Log.e(LOG_TAG, "POST KitKat getExternalFilesDir unavailable. " + e2.getMessage(), e2);
+		
 
-				files = new File[] { getSpecialStorageDirectory() };
-				Log.d(LOG_TAG, "KitKatExternalFileAccess POST 5");
-				
-				e2.printStackTrace();
-			}
+		Log.d(LOG_TAG, "KitKatExternalFileAccess Testing for Special Directories");
+		File f = getSpecialStorageDirectory();
+		if (f!=null) {
+			Log.d(LOG_TAG, "KitKatExternalFileAccess SPECIAL DIR: "+f.getAbsolutePath());
+			
+			files = new File[] { f };
 		} else {
-			Log.d(LOG_TAG,
-					"KitKat getExternalFilesDir unavailable.  Getting old version via reflection.");
-			try {
-				Object context = cordova.getActivity().getApplicationContext();
-				Method m = context.getClass().getMethod("getExternalFilesDir",
-						new Class[] { String.class });
-				m.setAccessible(true);
-				File file = (File) m.invoke(context, new Object[] { null });
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				Log.d(LOG_TAG, "KitKatExternalFileAccess POST");
+				try {
+					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 2");
+					files = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
+					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 3");
+				} catch (Throwable e2) {
+					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 4");
+					Log.e(LOG_TAG, "POST KitKat getExternalFilesDir unavailable. " + e2.getMessage(), e2);
 
-				files = new File[] { file };
-			} catch (Throwable e2) {
-				Log.e(LOG_TAG, "PRE KitKat getExternalFilesDir unavailable. " + e2.getMessage(), e2);
+					files = new File[] { Environment.getExternalStorageDirectory() };
+					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 5");
+					
+					e2.printStackTrace();
+				}
+			} else {
+				Log.d(LOG_TAG,
+						"KitKat getExternalFilesDir unavailable.  Getting old version via reflection.");
+				try {
+					Object context = cordova.getActivity().getApplicationContext();
+					Method m = context.getClass().getMethod("getExternalFilesDir",
+							new Class[] { String.class });
+					m.setAccessible(true);
+					File file = (File) m.invoke(context, new Object[] { null });
 
-				files = new File[] { getSpecialStorageDirectory() };
-				
-				e2.printStackTrace();
+					files = new File[] { file };
+				} catch (Throwable e2) {
+					Log.e(LOG_TAG, "PRE KitKat getExternalFilesDir unavailable. " + e2.getMessage(), e2);
+
+					files = new File[] { Environment.getExternalStorageDirectory() };
+					
+					e2.printStackTrace();
+				}
 			}
 		}
 

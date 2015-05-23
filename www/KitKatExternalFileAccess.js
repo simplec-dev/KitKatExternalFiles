@@ -30,7 +30,7 @@ var KitKatExternalFileAccess = function() {
 							callback(me);
 						}          
 				  },function(e) {
-						me.available = false;
+					  me.available = true;
 						if (callback) {
 							callback(me);
 						}

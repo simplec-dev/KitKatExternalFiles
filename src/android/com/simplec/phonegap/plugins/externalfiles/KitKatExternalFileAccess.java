@@ -149,11 +149,14 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 
 			} else if (ACTION_LIST_ALL_FILES.equals(action)) {
 				String root = args.getString(0);
+				if (!root.endsWith("/")) {
+					root = root + "/";
+				}
 				Collection<String> files = getRecursiveFiles(root);
 
 				JSONArray r = new JSONArray();
 				for (String file : files) {
-					r.put(file);
+					r.put(root+file);
 				}
 				callbackContext.success(r);
 				return true;

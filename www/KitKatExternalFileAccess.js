@@ -77,5 +77,9 @@ KitKatExternalFileAccess.prototype.getStorageStats = function(successCallback, f
 	cordova.exec(successCallback, failureCallback, 'KitKatExternalFileAccess', 'storageStats', []);
 };
 
+KitKatExternalFileAccess.prototype.listAllFiles = function(root, successCallback, failureCallback) {
+	cordova.exec(successCallback, failureCallback, 'KitKatExternalFileAccess', 'listAllFiles', [root]);
+};
+
 module.exports = new KitKatExternalFileAccess();
 

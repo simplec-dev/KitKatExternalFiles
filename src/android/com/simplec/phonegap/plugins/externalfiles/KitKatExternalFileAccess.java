@@ -3,7 +3,9 @@ package com.simplec.phonegap.plugins.externalfiles;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -22,6 +24,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 	private static final String ACTION_PACKAGE_NAME = "packageName";
 	private static final String ACTION_EXTERNAL_PATHS = "externalPaths";
 	private static final String ACTION_STORAGE_STATS = "storageStats";
+	private static final String ACTION_LIST_ALL_FILES = "listAllFiles";
 	private static final String LOG_TAG = "KitKatExternalFileAccess";
 
 	private String packageName = null;
@@ -144,6 +147,16 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 				callbackContext.success(r);
 				return true;
 
+			} else if (ACTION_LIST_ALL_FILES.equals(action)) {
+				String root = args.getString(0);
+				Collection<String> files = getRecursiveFiles(root);
+
+				JSONArray r = new JSONArray();
+				for (String file : files) {
+					r.put(file);
+				}
+				callbackContext.success(r);
+				return true;
 			} else {
 				callbackContext.error(action
 						+ " is not a supported function. Did you mean '"
@@ -177,5 +190,31 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 		}
 
 		return obj;
+	}
+
+
+	private Collection<String> getRecursiveFiles(String srcPath) {
+		Collection<String> files = new TreeSet<String>();
+		
+		File f = new File(srcPath);
+		if (f.isDirectory()) {
+			String children[] = f.list();
+
+			for (String child : children) {
+				File cf = new File(srcPath+"/"+child);
+				
+				if (cf.isDirectory()) {
+					Collection<String> subFiles = getRecursiveFiles(srcPath+"/"+child);
+					for (String subFile : subFiles) {
+						files.add((child + "/" + subFile).toLowerCase());
+					}
+					// do something
+				} else if (!cf.isHidden()){
+					files.add(child);
+				}		
+			}
+		}
+		
+		return files;
 	}
 }

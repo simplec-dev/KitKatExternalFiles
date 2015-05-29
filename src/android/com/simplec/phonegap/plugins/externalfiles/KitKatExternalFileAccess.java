@@ -163,6 +163,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 		        stats.put("build-host", android.os.Build.HOST);
 		        stats.put("build-type", android.os.Build.TYPE);
 		        stats.put("build-tags", android.os.Build.TAGS);
+		        stats.put("build-sdk", Build.VERSION.SDK_INT);
 
 				callbackContext.success(stats);
 				return true;

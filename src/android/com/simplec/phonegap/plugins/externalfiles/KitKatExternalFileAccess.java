@@ -126,10 +126,6 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 		
 		@Override
 		public void run() {
-			if (!root.endsWith("/")) {
-				root = root + "/";
-			}
-			
 			Collection<String> files = getRecursiveFiles(root);
 
 			JSONArray r = new JSONArray();
@@ -161,14 +157,21 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 				return true;
 
 			} else if (ACTION_STORAGE_STATS.equals(action)) {
-				JSONArray r = new JSONArray();
-				String[] externalPaths = getExternalPaths();
-				for (String path : externalPaths) {
-					JSONObject obj = getStatsForPath(path);
-					obj.put("path", path);
-					r.put(obj);
+				if (args.length()>0) {
+					JSONArray r = new JSONArray();
+					for (int i=0; i<args.length(); i++) {
+						String path = args.getString(i);
+						r.put(getStatsForPath(path));
+					}
+					callbackContext.success(r);
+				} else {
+					JSONArray r = new JSONArray();
+					String[] externalPaths = getExternalPaths();
+					for (String path : externalPaths) {
+						r.put(getStatsForPath(path));
+					}
+					callbackContext.success(r);
 				}
-				callbackContext.success(r);
 				return true;
 
 			} else if (ACTION_LIST_ALL_FILES.equals(action)) {
@@ -198,6 +201,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 			long freeSize = statFs.getFreeBytes();
 			long totalSize = statFs.getTotalBytes();
 
+			obj.put("path", path);
 			obj.put("available", availableSize);
 			obj.put("free", freeSize);
 			obj.put("total", totalSize);

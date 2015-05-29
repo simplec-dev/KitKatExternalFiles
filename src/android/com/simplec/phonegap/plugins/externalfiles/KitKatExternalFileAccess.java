@@ -160,8 +160,17 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 				if (args.length()>0) {
 					JSONArray r = new JSONArray();
 					for (int i=0; i<args.length(); i++) {
+						JSONObject stats = null;
 						String path = args.getString(i);
-						r.put(getStatsForPath(path));
+						if (path.equalsIgnoreCase("internal")) {
+							path = Environment.getDataDirectory().getPath();
+							stats = getStatsForPath(path);
+							stats.remove("path");
+							stats.put("path", args.getString(i));
+						} else {
+							stats = getStatsForPath(path);
+						}
+						r.put(stats);
 					}
 					callbackContext.success(r);
 				} else {

@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Build;
+import android.os.Debug;
 import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 	private static final String ACTION_PACKAGE_NAME = "packageName";
 	private static final String ACTION_EXTERNAL_PATHS = "externalPaths";
 	private static final String ACTION_STORAGE_STATS = "storageStats";
+	private static final String ACTION_HEAP_STATS = "heapStats";
 	private static final String ACTION_LIST_ALL_FILES = "listAllFiles";
 	private static final String LOG_TAG = "KitKatExternalFileAccess";
 
@@ -140,7 +142,17 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 	public boolean execute(String action, JSONArray args,
 			final CallbackContext callbackContext) throws JSONException {
 		try {
-			if (ACTION_PACKAGE_NAME.equals(action)) {
+			
+			if (ACTION_HEAP_STATS.equals(action)) {
+				JSONObject stats = new JSONObject();
+
+		        stats.put("allocated", Debug.getNativeHeapAllocatedSize());
+		        stats.put("available", Debug.getNativeHeapSize());
+		        stats.put("free", Debug.getNativeHeapFreeSize());
+
+				callbackContext.success(stats);
+				return true;
+			} else if (ACTION_PACKAGE_NAME.equals(action)) {
 				callbackContext.success(packageName);
 				return true;
 

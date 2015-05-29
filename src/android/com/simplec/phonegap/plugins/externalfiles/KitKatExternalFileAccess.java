@@ -26,6 +26,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 	private static final String ACTION_EXTERNAL_PATHS = "externalPaths";
 	private static final String ACTION_STORAGE_STATS = "storageStats";
 	private static final String ACTION_HEAP_STATS = "heapStats";
+	private static final String ACTION_BUILD_STATS = "buildStats";
 	private static final String ACTION_LIST_ALL_FILES = "listAllFiles";
 	private static final String LOG_TAG = "KitKatExternalFileAccess";
 
@@ -142,17 +143,40 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 	public boolean execute(String action, JSONArray args,
 			final CallbackContext callbackContext) throws JSONException {
 		try {
-			
-			if (ACTION_HEAP_STATS.equals(action)) {
+			if (ACTION_BUILD_STATS.equals(action)) {
 				JSONObject stats = new JSONObject();
 
-		        stats.put("allocated", Debug.getNativeHeapAllocatedSize());
-		        stats.put("available", Debug.getNativeHeapSize());
-		        stats.put("free", Debug.getNativeHeapFreeSize());
+		        stats.put("build-serial", android.os.Build.SERIAL);
+		        stats.put("build-model", android.os.Build.MODEL);
+		        stats.put("build-brand", android.os.Build.BRAND);
+		        stats.put("build-manufacturer", android.os.Build.MANUFACTURER);
+		        stats.put("build-product", android.os.Build.PRODUCT);
+		        stats.put("build-device", android.os.Build.DEVICE);
+		        stats.put("build-hardware", android.os.Build.HARDWARE);
+		        stats.put("build-cpu", android.os.Build.CPU_ABI);
+		        stats.put("build-cpu2", android.os.Build.CPU_ABI2);
+		        stats.put("build-display", android.os.Build.DISPLAY);
+		        stats.put("build-bootloader", android.os.Build.BOOTLOADER);
+		        stats.put("build-id", android.os.Build.ID);
+		        stats.put("build-fingerprint", android.os.Build.FINGERPRINT);
+		        stats.put("build-board", android.os.Build.BOARD);
+		        stats.put("build-host", android.os.Build.HOST);
+		        stats.put("build-type", android.os.Build.TYPE);
+		        stats.put("build-tags", android.os.Build.TAGS);
 
 				callbackContext.success(stats);
 				return true;
-			} else if (ACTION_PACKAGE_NAME.equals(action)) {
+			} else 
+				if (ACTION_HEAP_STATS.equals(action)) {
+					JSONObject stats = new JSONObject();
+
+			        stats.put("allocated", Debug.getNativeHeapAllocatedSize());
+			        stats.put("available", Debug.getNativeHeapSize());
+			        stats.put("free", Debug.getNativeHeapFreeSize());
+
+					callbackContext.success(stats);
+					return true;
+				} else if (ACTION_PACKAGE_NAME.equals(action)) {
 				callbackContext.success(packageName);
 				return true;
 

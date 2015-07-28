@@ -139,6 +139,36 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 		}
 	}
 
+	public static String getManufacturerSerialNumber() {
+		String serial = null;
+		try {
+			Class<?> c = Class.forName("android.os.SystemProperties");
+			Method get = c.getMethod("get", String.class, String.class);
+			
+			if (serial==null) {
+				try {
+					serial = (String) get.invoke(c, "sys.serialnumber", "unknown");
+				} catch (Exception e) {
+					//
+				}
+			}
+			
+			if (serial==null) {
+				try {
+					serial = (String) get.invoke(c, "ril.serialnumber", "unknown");
+				} catch (Exception e) {
+					//
+				}
+			}
+
+			if (serial==null) {
+				serial = android.os.Build.SERIAL;
+			}
+		} catch (Exception ignored) {
+		}
+		return serial;
+	}
+
 	@Override
 	public boolean execute(String action, JSONArray args,
 			final CallbackContext callbackContext) throws JSONException {
@@ -146,7 +176,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 			if (ACTION_BUILD_STATS.equals(action)) {
 				JSONObject stats = new JSONObject();
 
-		        stats.put("build-serial", android.os.Build.SERIAL);
+		        stats.put("build-serial", getManufacturerSerialNumber());
 		        stats.put("build-model", android.os.Build.MODEL);
 		        stats.put("build-brand", android.os.Build.BRAND);
 		        stats.put("build-manufacturer", android.os.Build.MANUFACTURER);

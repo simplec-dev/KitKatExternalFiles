@@ -149,15 +149,15 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 			Log.d(LOG_TAG, "sys.serialnumber= "+get.invoke(c, "sys.serialnumber", null));
 			Log.d(LOG_TAG, "android.os.Build.serial= "+android.os.Build.SERIAL);
 			
-			if (serial==null) {
+			if (serial==null || serial.trim().length()==0) {
 				serial = (String) get.invoke(c, "ril.serialnumber", null);
 			}
 			
-			if (serial==null) {
+			if (serial==null || serial.trim().length()==0) {
 				serial = (String) get.invoke(c, "sys.serialnumber", null);
 			}
 
-			if (serial==null) {
+			if (serial==null || serial.trim().length()==0) {
 				serial = android.os.Build.SERIAL;
 			}
 		} catch (Exception ignored) {

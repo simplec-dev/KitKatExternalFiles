@@ -271,9 +271,9 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 		try {
 			StatFs statFs = new StatFs(path);
 
-			long availableSize = statFs.getAvailableBytes();
-			long freeSize = statFs.getFreeBytes();
-			long totalSize = statFs.getTotalBytes();
+			long availableSize = statFs.getAvailableBlocks()*statFs.getBlockSize();
+			long freeSize = statFs.getFreeBlocks()*statFs.getBlockSize();
+			long totalSize = statFs.getBlockCount()*statFs.getBlockSize();
 
 			obj.put("path", path);
 			obj.put("available", availableSize / (1024*1024));

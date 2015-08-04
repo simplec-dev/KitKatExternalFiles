@@ -280,14 +280,23 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 			long freeSize = statFs.getFreeBlocksLong()*statFs.getBlockSizeLong();
 			long totalSize = statFs.getTotalBytes();
 
+			availableSize = availableSize / (1024*1024);
+			freeSize = freeSize / (1024*1024);
+			totalSize = totalSize / (1024*1024);
+
 			obj.put("path", path);
-			obj.put("available", availableSize / (1024*1024));
-			obj.put("free", freeSize / (1024*1024));
-			obj.put("total", totalSize / (1024*1024));
+			obj.put("available", availableSize);
+			obj.put("free", freeSize);
+			obj.put("total", totalSize);
+			
+
+			Log.d(LOG_TAG, "path avl="+availableSize+" free="+freeSize+" total="+totalSize);
 		} catch (Exception e) {
 			obj.put("available", 0);
 			obj.put("free", 0);
 			obj.put("total", 0);
+
+			Log.d(LOG_TAG, "KitKatExternalFileAccess ERROR: "+e.getMessage());
 		}
 
 		return obj;

@@ -276,9 +276,14 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 			statFs.getBlockCount();
 			statFs.getFreeBlocks();
 			
-			long availableSize = statFs.getAvailableBlocks()*statFs.getBlockSize();
-			long freeSize = statFs.getFreeBlocks()*statFs.getBlockSize();
-			long totalSize = statFs.getBlockCount()*statFs.getBlockSize();
+			long blockSize = statFs.getBlockSize();
+			long availableSize = statFs.getAvailableBlocks();
+			long freeSize = statFs.getFreeBlocks();
+			long totalSize = statFs.getBlockCount();
+			
+			availableSize = availableSize * blockSize;
+			freeSize = freeSize * blockSize;
+			totalSize = totalSize * blockSize;
 
 			availableSize = availableSize / (1024*1024);
 			freeSize = freeSize / (1024*1024);
@@ -290,7 +295,7 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 			obj.put("total", totalSize);
 			
 
-			Log.d(LOG_TAG, "path avl="+availableSize+" free="+freeSize+" total="+totalSize);
+			Log.d(LOG_TAG, "path="+path+" avl="+availableSize+" free="+freeSize+" total="+totalSize);
 		} catch (Exception e) {
 			obj.put("available", 0);
 			obj.put("free", 0);

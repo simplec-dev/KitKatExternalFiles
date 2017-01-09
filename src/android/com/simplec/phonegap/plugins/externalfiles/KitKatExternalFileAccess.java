@@ -72,8 +72,21 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 				Log.d(LOG_TAG, "KitKatExternalFileAccess POST");
 				try {
 					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 2");
-					files = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
+					File filesTmp[] = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
+					
+					File efr = cordova.getActivity().getApplicationContext().getExternalFilesDir(null);
+					if (efr!=null) {
+						files = new File[filesTmp.length+1];
+						for (int i=0; i<filesTmp.length; i++) {
+							files[i]=filesTmp[i];
+						}
+						files[filesTmp.length]=efr;
+					} else {
+						files = filesTmp;
+						filesTmp = null;
+					}
 					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 3");
+					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 3a ");
 				} catch (Throwable e2) {
 					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 4");
 					Log.e(LOG_TAG, "POST KitKat getExternalFilesDir unavailable. " + e2.getMessage(), e2);

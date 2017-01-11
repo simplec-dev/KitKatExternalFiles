@@ -58,7 +58,6 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 	public String[] getExternalPaths() {
 		Log.d(LOG_TAG, "KitKatExternalFileAccess getExternalPaths");
 		File[] files = new File[0];
-		
 
 		Log.d(LOG_TAG, "KitKatExternalFileAccess Testing for Special Directories");
 		File f = getSpecialStorageDirectory();
@@ -73,18 +72,18 @@ public class KitKatExternalFileAccess extends CordovaPlugin {
 				try {
 					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 2");
 					File filesTmp[] = cordova.getActivity().getApplicationContext().getExternalFilesDirs(null);
-					
-					File efr = cordova.getActivity().getApplicationContext().getExternalFilesDir(null);
-					if (efr!=null) {
-						files = new File[filesTmp.length+1];
-						for (int i=0; i<filesTmp.length; i++) {
-							files[i]=filesTmp[i];
-						}
-						files[filesTmp.length]=efr;
+
+					String manufacturer = Build.MANUFACTURER;
+					String hardware = Build.HARDWARE;
+					String model = Build.MODEL;
+					if (manufacturer!=null && manufacturer.equalsIgnoreCase("BLU") && hardware!=null && hardware.equalsIgnoreCase("mt6580")) {
+						Log.d(LOG_TAG, "KitKatExternalFileAccess:  This is a BLU mt6580 SPECIAL CASE");
+						files = new File[] {filesTmp[0]};
 					} else {
 						files = filesTmp;
 						filesTmp = null;
 					}
+					
 					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 3");
 					Log.d(LOG_TAG, "KitKatExternalFileAccess POST 3a ");
 				} catch (Throwable e2) {
